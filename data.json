@@ -19,6 +19,12 @@
   ],
   "qas": [
     {
+      "id": "qa-1793560467233",
+      "sessionId": "sess-1793558812299",
+      "question": "Authentication and Authorization",
+      "answer": "Authentication = Who are you?\nAuthorization = What are you allowed to do?RBAC (Role Based Access Control)\n\nJWT = JSON Web Token"
+    },
+    {
       "id": "qa-1793560166653",
       "sessionId": "sess-1793558812299",
       "question": "Microservices vs Monolithic",
