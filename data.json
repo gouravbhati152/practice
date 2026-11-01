@@ -19,6 +19,12 @@
   ],
   "qas": [
     {
+      "id": "qa-1793559922793",
+      "sessionId": "sess-1793558812299",
+      "question": "Shallow Copy vs Deep Copy",
+      "answer": "A shallow copy creates a new object, but nested objects are still shared with the original object.\n```\nimport copy\n\na = [[1, 2], [3, 4]]\n\nb = copy.copy(a)\n\nb[0][0] = 100\n\nprint(a)\nprint(b)\n```\n```\na = [[100, 2], [3, 4]]\nb = [[100, 2], [3, 4]]\n```\n\nA deep copy creates a new object and recursively creates copies of all nested objects.\n```\nimport copy\n\na = [[1, 2], [3, 4]]\n\nb = copy.deepcopy(a)\n\nb[0][0] = 100\n\nprint(a)\nprint(b)\n```"
+    },
+    {
       "id": "qa-1793559822224",
       "sessionId": "sess-1793558812299",
       "question": "constructor and Deconstructor",
