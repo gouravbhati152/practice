@@ -1,11 +1,24 @@
 // ── GitHub Config ──────────────────────────────────────────────────────────
 // CHANGE THIS to "<your-github-username>/<your-repo-name>" of the repo that will hold data.json
-const GH_REPO  = 'gouravbhati152/qa-hub';
+const GH_REPO  = 'gouravbhati152/practice';
 const GH_FILE  = 'data.json';
 const GH_API   = `https://api.github.com/repos/${GH_REPO}/contents/${GH_FILE}`;
 
+// Token lives only in this browser (localStorage). If the browser blocks storage,
+// it is kept in memory for the current tab so the app still works.
+let memoryToken = '';
+
 function getToken() {
-  return localStorage.getItem('gh_token') || '';
+  if (memoryToken) return memoryToken;
+  try { return localStorage.getItem('gh_token') || ''; } catch (e) { return ''; }
+}
+function storeToken(token) {
+  memoryToken = token;
+  try {
+    localStorage.setItem('gh_token', token);
+    if (localStorage.getItem('gh_token') === token) { memoryToken = ''; return true; }
+  } catch (e) {}
+  return false; // storage blocked → token only kept for this tab
 }
 function getHeaders() {
   return {
@@ -15,15 +28,101 @@ function getHeaders() {
   };
 }
 
+// Pasted tokens often carry spaces, newlines or quotes — clean them up.
+function cleanToken(raw) {
+  return (raw || '').replace(/^\s*(token|bearer)\s+/i, '').replace(/["'\s]/g, '');
+}
+
+// Checks that a token works for this repo and can write to it.
+async function checkAccess(token) {
+  let res;
+  try {
+    res = await fetch(`https://api.github.com/repos/${GH_REPO}`, {
+      headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github+json' }
+    });
+  } catch (e) {
+    return { ok: false, message: "Can't reach GitHub. Check your internet connection and try again." };
+  }
+  if (res.status === 401) return { ok: false, message: 'GitHub rejected this token. It may be mistyped, expired or deleted — create a new one.' };
+  if (res.status === 404) return { ok: false, message: `Repo "${GH_REPO}" was not found, or this token can't see it. Check GH_REPO at the top of app.js, and make sure the token has the "repo" scope.` };
+  if (!res.ok)            return { ok: false, message: `GitHub returned an error (${res.status}). Try again in a moment.` };
+  const info = await res.json().catch(() => ({}));
+  if (info.permissions && info.permissions.push === false) {
+    return { ok: false, message: 'This token can read the repo but not write to it. Create a token with the "repo" scope.' };
+  }
+  return { ok: true };
+}
+
+// ── In-page dialog (browser prompt() boxes are often blocked) ──────────────
+function openDialog({ title, desc, label, placeholder, secret, okText, onSubmit }) {
+  const backdrop = document.getElementById('dialog-backdrop');
+  const input    = document.getElementById('dialog-input');
+  const errEl    = document.getElementById('dialog-error');
+  const okBtn    = document.getElementById('dialog-ok');
+  const cancel   = document.getElementById('dialog-cancel');
+  const showBtn  = document.getElementById('dialog-show');
+
+  document.getElementById('dialog-title').textContent = title;
+  document.getElementById('dialog-desc').innerHTML    = desc || '';
+  document.getElementById('dialog-label').textContent = label;
+  input.placeholder = placeholder || '';
+  input.type  = secret ? 'password' : 'text';
+  input.value = '';
+  errEl.textContent = '';
+  okBtn.textContent = okText || 'Save';
+  okBtn.disabled = false;
+  showBtn.style.display = secret ? 'inline-block' : 'none';
+  showBtn.textContent = 'Show';
+  backdrop.classList.remove('hidden');
+  setTimeout(() => input.focus(), 30);
+
+  function close() {
+    backdrop.classList.add('hidden');
+    okBtn.onclick = cancel.onclick = showBtn.onclick = input.onkeydown = backdrop.onmousedown = null;
+  }
+  async function submit() {
+    errEl.textContent = '';
+    okBtn.disabled = true;
+    const original = okBtn.textContent;
+    okBtn.textContent = 'Checking…';
+    let error = null;
+    try { error = await onSubmit(input.value); }
+    catch (e) { error = e.message || 'Something went wrong.'; }
+    okBtn.textContent = original;
+    okBtn.disabled = false;
+    if (error) errEl.textContent = error; else close();
+  }
+  okBtn.onclick  = submit;
+  cancel.onclick = close;
+  showBtn.onclick = () => {
+    const hidden = input.type === 'password';
+    input.type = hidden ? 'text' : 'password';
+    showBtn.textContent = hidden ? 'Hide' : 'Show';
+  };
+  input.onkeydown = e => { if (e.key === 'Enter') submit(); if (e.key === 'Escape') close(); };
+  backdrop.onmousedown = e => { if (e.target === backdrop) close(); };
+}
+
 function updateToken() {
-  const newToken = prompt('Paste your new GitHub Personal Access Token:\n(Settings → Developer settings → Personal access tokens → Tokens classic)');
-  if (!newToken?.trim()) return;
-  localStorage.setItem('gh_token', newToken.trim());
-  showToast('Token updated! Reconnecting…');
-  setStatus('loading', 'Reconnecting…');
-  // Reload data with new token
-  loadData().then(() => {
-    renderSidebar(); renderHeader(); renderList();
+  openDialog({
+    title: 'Update GitHub token',
+    desc: 'Paste a Personal Access Token with the <b>repo</b> scope.<br>GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic).',
+    label: 'Token',
+    placeholder: 'ghp_… or github_pat_…',
+    secret: true,
+    okText: 'Save token',
+    onSubmit: async (raw) => {
+      const token = cleanToken(raw);
+      if (!token) return 'Paste your token first.';
+      const result = await checkAccess(token);
+      if (!result.ok) return result.message;   // dialog stays open, token NOT saved
+      const persisted = storeToken(token);
+      showToast(persisted ? 'Token saved. Reconnecting…' : 'Token accepted for this tab only (browser blocks storage).');
+      setStatus('loading', 'Reconnecting…');
+      await loadData();
+      renderSidebar(); renderHeader(); renderList();
+      return null;
+    }
   });
 }
 
@@ -72,27 +171,33 @@ function setStatus(state, msg) {
 async function loadData() {
   setStatus('loading', 'Connecting to GitHub…');
   if (!getToken()) {
-    sessions = SEED_SESSIONS;
-    qas      = SEED_QAS;
+    sessions = [...SEED_SESSIONS];
+    qas      = [...SEED_QAS];
     activeSessionId = sessions[0]?.id || null;
-    setStatus('error', 'No token — click "Update Token"');
+    setStatus('error', 'No token — click Update Token');
     showToast('Add your GitHub token using "Update Token" in the sidebar.');
     return;
   }
   try {
     const res = await fetch(GH_API + '?t=' + Date.now(), { headers: getHeaders() });
 
-    // data.json was deleted or never created → recreate it from the built-in Q&As
     if (res.status === 404) {
+      // Either data.json is missing, or the repo/token is wrong. Tell them apart.
+      const access = await checkAccess(getToken());
+      if (!access.ok) { const err = new Error(access.message); err.userFacing = true; throw err; }
+      // Repo is fine → data.json was deleted or never created. Recreate it.
       ghFileSha = null;
-      sessions = SEED_SESSIONS;
-      qas      = SEED_QAS;
+      sessions = [...SEED_SESSIONS];
+      qas      = [...SEED_QAS];
       await save();
       showToast('data.json was missing — recreated it.');
       activeSessionId = sessions[0]?.id || null;
       return;
     }
-    if (res.status === 401) throw new Error('Token invalid or expired — click "Update Token"');
+    if (res.status === 401) {
+      const err = new Error('GitHub rejected the saved token. Click "Update Token" and paste a new one.');
+      err.userFacing = true; throw err;
+    }
     if (!res.ok) throw new Error('GitHub fetch failed: ' + res.status);
 
     const json = await res.json();
@@ -101,8 +206,8 @@ async function loadData() {
 
     if (!decoded.sessions || decoded.sessions.length === 0) {
       // File exists but is empty — push seed data to GitHub
-      sessions = SEED_SESSIONS;
-      qas      = SEED_QAS;
+      sessions = [...SEED_SESSIONS];
+      qas      = [...SEED_QAS];
       await save();
     } else {
       sessions = decoded.sessions;
@@ -112,10 +217,15 @@ async function loadData() {
   } catch(e) {
     console.error('GitHub load error:', e);
     // Fall back to seed data so the app still opens
-    sessions = SEED_SESSIONS;
-    qas      = SEED_QAS;
-    setStatus('error', e.message.startsWith('Token') ? e.message : 'Offline — data not saved');
-    showToast(e.message.startsWith('Token') ? e.message : 'Could not reach GitHub. Working offline.');
+    sessions = [...SEED_SESSIONS];
+    qas      = [...SEED_QAS];
+    if (e.userFacing) {
+      setStatus('error', 'Not connected — see message');
+      showToast(e.message);
+    } else {
+      setStatus('error', 'Offline — data not saved');
+      showToast('Could not reach GitHub. Working offline.');
+    }
   }
   activeSessionId = sessions[0]?.id || null;
 }
@@ -157,15 +267,28 @@ async function save() {
 }
 
 // ── Sessions ───────────────────────────────────────────────────────────────
-async function createSession() {
-  const name = prompt('Session name:');
-  if (!name?.trim()) return;
-  const sess = { id: 'sess-' + Date.now(), name: name.trim() };
-  sessions.push(sess);
-  try { await save(); } catch(e) { sessions.pop(); return; }
-  activeSessionId = sess.id;
-  renderSidebar(); renderHeader(); renderList();
-  showToast('Session created');
+function createSession() {
+  openDialog({
+    title: 'New session',
+    desc: 'For example: Python, PySpark, SQL, Pandas…',
+    label: 'Session name',
+    placeholder: 'e.g. Pandas Questions',
+    secret: false,
+    okText: 'Create',
+    onSubmit: async (raw) => {
+      const name = (raw || '').trim();
+      if (!name) return 'Enter a session name.';
+      if (sessions.some(s => s.name.toLowerCase() === name.toLowerCase())) return 'A session with this name already exists.';
+      const sess = { id: 'sess-' + Date.now(), name };
+      sessions.push(sess);
+      try { await save(); }
+      catch (e) { sessions.pop(); return 'Could not save to GitHub (' + e.message + '). Try "Update Token".'; }
+      activeSessionId = sess.id;
+      renderSidebar(); renderHeader(); renderList();
+      showToast('Session created');
+      return null;
+    }
+  });
 }
 
 function switchSession(id) {

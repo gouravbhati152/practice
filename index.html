@@ -134,6 +134,26 @@
 </div>
 <div class="toast" id="toast"></div>
 
+<!-- Shared dialog (used by Update Token and New Session) -->
+<div class="modal-backdrop hidden" id="dialog-backdrop">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="dialog-title">
+    <h3 id="dialog-title"></h3>
+    <p id="dialog-desc"></p>
+    <div class="modal-field">
+      <div class="modal-label-row">
+        <label id="dialog-label" for="dialog-input"></label>
+        <button type="button" class="modal-show" id="dialog-show">Show</button>
+      </div>
+      <input id="dialog-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" />
+      <div class="dialog-error" id="dialog-error" role="alert"></div>
+    </div>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-ghost" id="dialog-cancel">Cancel</button>
+      <button type="button" class="btn btn-primary" id="dialog-ok">Save</button>
+    </div>
+  </div>
+</div>
+
 <script src="app.js"></script>
 </body>
 </html>

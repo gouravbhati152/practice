@@ -283,6 +283,16 @@
     .modal-field input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(44,95,74,0.12); }
     .modal-field input.error { border-color: var(--danger); }
     .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 1.25rem; }
+    .modal-label-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px; }
+    .modal-label-row label { margin-bottom: 0; }
+    .modal-show {
+      border: none; background: transparent; color: var(--accent); cursor: pointer;
+      font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; padding: 0;
+    }
+    .modal-show:hover { text-decoration: underline; }
+    .dialog-error { color: var(--danger); font-size: 12.5px; line-height: 1.5; margin-top: 8px; }
+    .dialog-error:empty { display: none; }
+    .btn:disabled { opacity: 0.6; cursor: default; }
     .token-btn {
       display: flex; align-items: center; gap: 6px; width: 100%; padding: 7px 10px;
       background: transparent; border: 1px solid var(--border); border-radius: 8px;

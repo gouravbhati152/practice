@@ -16,7 +16,7 @@ browser or device.
 
 ## One-time setup
 
-1. Create a **public** GitHub repo (for example `qa-hub`) and upload these files.
+1. Create a **public** GitHub repo (for example `practice`) and upload these files.
 2. Turn on **GitHub Pages**: repo **Settings → Pages → Deploy from branch → main → / (root) → Save**.
 3. In `app.js`, make sure `GH_REPO` matches your repo (`username/repo-name`).
 4. Create a token: GitHub **Settings → Developer settings → Personal access tokens → Tokens (classic)
