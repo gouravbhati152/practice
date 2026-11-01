@@ -19,6 +19,12 @@
   ],
   "qas": [
     {
+      "id": "qa-1793560166653",
+      "sessionId": "sess-1793558812299",
+      "question": "Microservices vs Monolithic",
+      "answer": "Microservices architecture is a software architecture where an application is divided into small, independent services, with each service responsible for a specific business functionality.\n“Monolithic architecture is an approach where all application functionalities are developed, deployed, and managed as a single unit.”"
+    },
+    {
       "id": "qa-1793559922793",
       "sessionId": "sess-1793558812299",
       "question": "Shallow Copy vs Deep Copy",
