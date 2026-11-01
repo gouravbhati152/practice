@@ -19,6 +19,12 @@
   ],
   "qas": [
     {
+      "id": "qa-1793559822224",
+      "sessionId": "sess-1793558812299",
+      "question": "constructor and Deconstructor",
+      "answer": "A constructor is a special method that is automatically called when an object is created. It is mainly used to initialize the object's attributes.\n__init()__ use hota h\n\nA destructor is a special method that is called when an object is about to be destroyed, and it can be used for cleanup operations.\n__del__()"
+    },
+    {
       "id": "qa-1793559522730",
       "sessionId": "sess-1793558812299",
       "question": "Decorator",
