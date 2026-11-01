@@ -19,6 +19,12 @@
   ],
   "qas": [
     {
+      "id": "qa-1793558879995",
+      "sessionId": "sess-1793558812299",
+      "question": "Design Pattern",
+      "answer": "A **Design Pattern** is a reusable solution to a commonly occurring software design problem"
+    },
+    {
       "id": "qa-1775037797769",
       "sessionId": "sess-sql",
       "question": "What is a transaction?",
