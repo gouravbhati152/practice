@@ -19,6 +19,12 @@
   ],
   "qas": [
     {
+      "id": "qa-1793559455651",
+      "sessionId": "sess-1793558812299",
+      "question": "OOPs",
+      "answer": "Composition is an OOP technique where a class is built by combining objects of other classes.\nEk class ke andar doosri class ka object rakho.\n```\nclass Engine:\n\n    def start(self):\n        print(\"Engine started\")\n\n\nclass Car:\n\n    def __init__(self):\n        self.engine = Engine()\n\n    def start_car(self):\n        self.engine.start()\n        print(\"Car started\")\n```\n```\ncar = Car()\n\ncar.start_car()\n```"
+    },
+    {
       "id": "qa-1793558879995",
       "sessionId": "sess-1793558812299",
       "question": "Design Pattern",
