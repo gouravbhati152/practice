@@ -1,0 +1,96 @@
+{
+  "sessions": [
+    {
+      "id": "sess-python",
+      "name": "Python Questions"
+    },
+    {
+      "id": "sess-pyspark",
+      "name": "PySpark Questions"
+    },
+    {
+      "id": "sess-sql",
+      "name": "SQL Questions"
+    }
+  ],
+  "qas": [
+    {
+      "id": "qa-1775037797769",
+      "sessionId": "sess-sql",
+      "question": "What is a transaction?",
+      "answer": "A transaction is a single logical unit of work that consists of one or more SQL statements, which must either fully succeed or fully fail. Transactions ensure data integrity in the database.\n\nThe classic example is a `bank transfer`. If you move $100 from Savings to Checking:\n\nSubtract $100 from Savings.\nAdd $100 to Checking.\n\n## The ACID Properties\n**Atomicity:** All or nothing. If one step fails, everything rolls back.\n**Consistency:** Database goes from one valid state to another.\n**Isolation:** Transactions don't interfere with each other.\n**Durability:** Once committed, data is permanent even if server crashes.\n`ACID → Always Commit In Database`\n\n## Transaction Commands"
+    },
+    {
+      "id": "qa-1775036990253",
+      "sessionId": "sess-sql",
+      "question": "When should you NOT use indexes?",
+      "answer": "1. Small Tables\n2. Tables with Frequent Writes\n3. Columns with Low Selectivity\n4. Temporary or Staging Tables\n5. Columns Frequently Updated"
+    },
+    {
+      "id": "qa-1775036841517",
+      "sessionId": "sess-sql",
+      "question": "Types of indexes (clustered vs non-clustered)",
+      "answer": "## Clustered Index\nA Clustered Index defines the **physical order** of rows in a table. The data rows are rearranged to match the index order. A table can have **only one** clustered index.\n\n`Query:`\n```\nCREATE CLUSTERED INDEX IX_Student_RollNo\nON Student (Roll_No ASC);\n```\n\n## Non-Clustered Index\nDoes not change physical data order. Creates a **separate structure** with indexed columns and pointers to actual rows. A table can have **multiple** non-clustered indexes.\n\n```\nCREATE NONCLUSTERED INDEX NIX_FTE_Name\nON Student (Name ASC);\n```\n\n## Key Differences\n| Feature | Clustered | Non-Clustered |\n| --- | --- | --- |\n| Physical order | Yes | No |\n| Per table | Only 1 | Multiple allowed |\n| Speed | Faster for range | Faster for lookups |\n| Storage | In table | Separate structure |"
+    },
+    {
+      "id": "qa-1775035263633",
+      "sessionId": "sess-sql",
+      "question": "What is an index?",
+      "answer": "An **index** is a database object that improves the speed of data retrieval from a table.\nIt works like a table of contents in a book — the database can quickly locate rows without scanning the entire table.\n\n## Types of Indexes\n`1. Single-Column Index`\n```\nCREATE INDEX idx_employee_name\nON employees(name);\n```\n`2. Composite (Multi-Column) Index`\n```\nCREATE INDEX idx_employee_dept_salary\nON employees(department, salary);\n```\n`3. Unique Index`\n```\nCREATE UNIQUE INDEX idx_unique_email\nON employees(email);\n```"
+    },
+    {
+      "id": "qa-1775028285550",
+      "sessionId": "sess-sql",
+      "question": "Difference Between ROW_NUMBER(), RANK(), and DENSE_RANK()",
+      "answer": "All three are window functions for ranking rows, but behave differently when ties occur.\n\n## Comparison\n| Function | Ties | Skips ranks? | Example |\n| --- | --- | --- | --- |\n| ROW_NUMBER() | No ties, always unique | N/A | 1, 2, 3, 4 |\n| RANK() | Same rank for ties | Yes | 1, 1, 3, 4 |\n| DENSE_RANK() | Same rank for ties | No | 1, 1, 2, 3 |\n\n## ROW_NUMBER()\nAssigns a unique sequential number — even if two rows have the same value.\n\n## RANK()\nTies get the same rank, then ranks are **skipped**.\n`Example: 1, 1, 3` (rank 2 is skipped)\n\n## DENSE_RANK()\nTies get the same rank, ranks are **not skipped**.\n`Example: 1, 1, 2` (continues sequentially)"
+    },
+    {
+      "id": "qa-1775027926958",
+      "sessionId": "sess-sql",
+      "question": "What are window functions?",
+      "answer": "A window function performs a calculation across a set of rows related to the current row **without collapsing them** into a single output row.\n\nUnlike aggregate functions, window functions do not group the rows — they look over a \"window\" of rows.\n\n## Syntax\n```\nSELECT column1, column2,\n       window_function() OVER (\n           [PARTITION BY column]\n           [ORDER BY column]\n       ) AS alias\nFROM table_name;\n```\n\n## Key Points\n**PARTITION BY** — groups rows within the window\n**ORDER BY** — defines order inside the window"
+    },
+    {
+      "id": "qa-1775027768237",
+      "sessionId": "sess-sql",
+      "question": "What is a CTE (Common Table Expression)?",
+      "answer": "A CTE is a temporary named result set you can reference within a SELECT, INSERT, UPDATE, or DELETE query. Defined using the `WITH` keyword — exists only for the duration of the query.\n\n```\nWITH cte_name AS (\n    SELECT column1, column2\n    FROM table_name\n    WHERE condition\n)\nSELECT *\nFROM cte_name\nWHERE some_condition;\n```"
+    },
+    {
+      "id": "qa-1775027411200",
+      "sessionId": "sess-sql",
+      "question": "What is GROUP BY?",
+      "answer": "GROUP BY groups rows that have the same values in specified columns. Used with aggregate functions like `COUNT()`, `SUM()`, `AVG()`, `MAX()`, `MIN()`.\n\n```\nSELECT department, COUNT(*) AS employee_count\nFROM employees\nGROUP BY department;\n```\n\n## Key Points\nGroups rows based on column values\nUsed with aggregate functions\nDoes not sort the result unless combined with ORDER BY"
+    },
+    {
+      "id": "qa-1775026529658",
+      "sessionId": "sess-sql",
+      "question": "What is normalization and denormalization?",
+      "answer": "**Normalization** organizes data to reduce redundancy by dividing large tables into smaller related tables.\n\n## Normal Forms\n| Form | Rule |\n| --- | --- |\n| 1NF | No repeating groups; atomic values |\n| 2NF | 1NF + full dependency on primary key |\n| 3NF | 2NF + no transitive dependency |\n| BCNF | 3NF + stricter candidate key rules |\n\n## Before → After Normalization\n```\nBefore: Customer(ID, Name, OrderID, OrderDate, Product)\nAfter:  Customer(ID, Name)\n        Orders(OrderID, CustomerID, OrderDate)\n```\n\n**Denormalization** combines tables to improve read performance, even if it introduces redundancy.\n\n**OLTP databases** → normalized\n**OLAP / reporting databases** → often denormalized"
+    },
+    {
+      "id": "qa-1775026313312",
+      "sessionId": "sess-sql",
+      "question": "What are keys in SQL and different types of keys?",
+      "answer": "A **key** uniquely identifies a row in a table and helps establish relationships between tables.\n\n## Types of Keys\n| Key | Description |\n| --- | --- |\n| Primary Key | Unique + Not Null. Only one per table |\n| Foreign Key | Links to Primary Key of another table |\n| Unique Key | Unique values, allows one NULL |\n| Candidate Key | Any column that could be a primary key |\n| Composite Key | Two or more columns combined as a key |\n| Super Key | Any set of columns that uniquely identifies a row |\n| Alternate Key | Candidate keys not chosen as the primary key |\n\n## Primary Key Example\n```\nCREATE TABLE employees (\n    emp_id INT PRIMARY KEY,\n    name VARCHAR(50)\n);\n```\n## Foreign Key Example\n```\nCREATE TABLE orders (\n    order_id INT PRIMARY KEY,\n    customer_id INT,\n    FOREIGN KEY (customer_id) REFERENCES customers(id)\n);\n```"
+    },
+    {
+      "id": "qa-1775024751991",
+      "sessionId": "sess-sql",
+      "question": "Explain different types of joins",
+      "answer": "Joins combine data from two or more tables based on a related column.\n\n## Types of Joins\n| Join Type | Returns |\n| --- | --- |\n| INNER JOIN | Only matching rows from both tables |\n| LEFT JOIN | All left rows + matching right rows |\n| RIGHT JOIN | All right rows + matching left rows |\n| FULL JOIN | All rows from both tables |\n| CROSS JOIN | Cartesian product of both tables |\n| SELF JOIN | Table joined with itself |\n\n## Examples\n```\n-- INNER JOIN\nSELECT * FROM orders\nINNER JOIN customers ON orders.customer_id = customers.id;\n\n-- LEFT JOIN\nSELECT * FROM customers\nLEFT JOIN orders ON customers.id = orders.customer_id;\n\n-- SELF JOIN\nSELECT A.name, B.name AS manager\nFROM employees A\nJOIN employees B ON A.manager_id = B.id;\n```"
+    },
+    {
+      "id": "q1",
+      "sessionId": "sess-python",
+      "question": "What is a Python decorator?",
+      "answer": "## Definition\nA **decorator** is a function that wraps another function to extend its behaviour without modifying it directly.\n\n## Example\n```\ndef my_decorator(func):\n    def wrapper():\n        print(\"Before\")\n        func()\n        print(\"After\")\n    return wrapper\n\n@my_decorator\ndef say_hello():\n    print(\"Hello!\")\n```\nCalling `say_hello()` prints: Before → Hello! → After"
+    },
+    {
+      "id": "q3",
+      "sessionId": "sess-sql",
+      "question": "What is the difference between WHERE and HAVING?",
+      "answer": "## Comparison\n| Clause | When it filters | Works with aggregates? |\n| --- | --- | --- |\n| WHERE | Before aggregation | No |\n| HAVING | After aggregation | Yes |\n\n## Example\n```\nSELECT department, COUNT(*) as total\nFROM employees\nWHERE salary > 50000\nGROUP BY department\nHAVING COUNT(*) > 5;\n```\n**WHERE** removes rows before grouping.\n**HAVING** filters the grouped results."
+    }
+  ]
+}
