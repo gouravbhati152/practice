@@ -19,6 +19,12 @@
   ],
   "qas": [
     {
+      "id": "qa-1793559522730",
+      "sessionId": "sess-1793558812299",
+      "question": "Decorator",
+      "answer": "## Definition\nA **decorator** is a function that wraps another function to extend its behaviour without modifying it directly.\n\n## Example\n```\ndef my_decorator(func):\n    def wrapper():\n        print(\"Before\")\n        func()\n        print(\"After\")\n    return wrapper\n\n@my_decorator\ndef say_hello():\n    print(\"Hello!\")\n```\nCalling `say_hello()` prints: Before → Hello! → After"
+    },
+    {
       "id": "qa-1793559455651",
       "sessionId": "sess-1793558812299",
       "question": "OOPs",
