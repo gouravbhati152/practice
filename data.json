@@ -22,7 +22,7 @@
       "id": "qa-1793601308444",
       "sessionId": "sess-1793558812299",
       "question": "valid parenthesis",
-      "answer": "```\ndef is_valid(s):\n    stack = []\n\n    brackets = {\n        ')': '(',\n        ']': '[',\n        '}': '{'\n    }\n\n    for char in s:\n\n        if char in brackets:\n            if not stack or stack[-1] != brackets[char]:\n                return False\n\n            stack.pop()\n\n        else:\n            stack.append(char)\n\n    return len(stack) == 0\n\n\nprint(is_valid(\"()\"))       # True\nprint(is_valid(\"()[]{}\"))   # True\nprint(is_valid(\"(]\"))       # False\nprint(is_valid(\"([{}])\"))   # True\nprint(is_valid(\"([)]\"))     # False\n```"
+      "answer": "```\ndef is_valid(s):\n    stack = []\n    brackets = {\n        ')': '(',\n        ']': '[',\n        '}': '{'\n    }\n    for char in s:\n        if char in brackets:\n            if not stack or stack[-1] != brackets[char]:\n                return False\n            stack.pop()\n        else:\n            stack.append(char)\n    return len(stack) == 0\n\nprint(is_valid(\"()\"))       # True\nprint(is_valid(\"()[]{}\"))   # True\nprint(is_valid(\"(]\"))       # False\nprint(is_valid(\"([{}])\"))   # True\nprint(is_valid(\"([)]\"))     # False\n```"
     },
     {
       "id": "qa-1793560467233",
