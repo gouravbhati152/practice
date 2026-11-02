@@ -76,7 +76,7 @@
       "id": "qa-1793559455651",
       "sessionId": "sess-1793558812299",
       "question": "OOPs",
-      "answer": "Composition is an OOP technique where a class is built by combining objects of other classes.\nEk class ke andar doosri class ka object rakho.\n```\nclass Engine:\n\n    def start(self):\n        print(\"Engine started\")\n\n\nclass Car:\n\n    def __init__(self):\n        self.engine = Engine()\n\n    def start_car(self):\n        self.engine.start()\n        print(\"Car started\")\n```\n```\ncar = Car()\n\ncar.start_car()\n```"
+      "answer": "**Class**\nA class is a blueprint/template for creating objects.\n\n**Object**\nAn object is an instance of a class.\n\n**Encapsulation**\nEncapsulation means bundling data and methods together and controlling access to the data.\n```\nclass BankAccount:\n\n    def __init__(self, balance):\n        self.__balance = balance\n\n    def deposit(self, amount):\n        if amount > 0:\n            self.__balance += amount\n\n    def get_balance(self):\n        return self.__balance\n```\n```\naccount = BankAccount(10000)\naccount.deposit(5000)\nprint(account.get_balance())\n```\n\n\nComposition is an OOP technique where a class is built by combining objects of other classes.\nEk class ke andar doosri class ka object rakho.\n```\nclass Engine:\n\n    def start(self):\n        print(\"Engine started\")\n\n\nclass Car:\n\n    def __init__(self):\n        self.engine = Engine()\n\n    def start_car(self):\n        self.engine.start()\n        print(\"Car started\")\n```\n```\ncar = Car()\n\ncar.start_car()\n```"
     },
     {
       "id": "qa-1793558879995",
