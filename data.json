@@ -19,6 +19,12 @@
   ],
   "qas": [
     {
+      "id": "qa-1793602885499",
+      "sessionId": "sess-1793558812299",
+      "question": "overloading vs Overriding",
+      "answer": "Method overloading means having multiple methods with the same name but different parameters.\nMethod overriding happens when a child class provides its own implementation of a method that already exists in the parent class."
+    },
+    {
       "id": "qa-1793602806860",
       "sessionId": "sess-1793558812299",
       "question": "Multithreading vs Multiprocessing",
