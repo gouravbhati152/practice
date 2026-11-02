@@ -19,6 +19,12 @@
   ],
   "qas": [
     {
+      "id": "qa-1793603074570",
+      "sessionId": "sess-1793558812299",
+      "question": "methods",
+      "answer": "**Instance Method**\nIt works with a particular object/instance of the class.\nIt takes self as the first parameter.\n\n**Class Method** @classmethod\nA class method works with the class itself, rather than a particular object. \nit takes cls as the argument.\n\n**Static method**\t@staticmethod"
+    },
+    {
       "id": "qa-1793602885499",
       "sessionId": "sess-1793558812299",
       "question": "overloading vs Overriding",
