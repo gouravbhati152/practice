@@ -19,6 +19,12 @@
   ],
   "qas": [
     {
+      "id": "qa-1793602806860",
+      "sessionId": "sess-1793558812299",
+      "question": "Multithreading vs Multiprocessing",
+      "answer": "**Multithreading** = multiple threads inside one process\n**Multiprocessing** = multiple processes running independently\n\nA thread is a lightweight unit of execution inside a process.\n```\nimport threading\nimport time\n\ndef task(name):\n    print(f\"{name} started\")\n    time.sleep(2)\n    print(f\"{name} completed\")\n\nt1 = threading.Thread(target=task, args=(\"Task 1\",))\nt2 = threading.Thread(target=task, args=(\"Task 2\",))\n\nt1.start()\nt2.start()\n\nt1.join()\nt2.join()\n\nprint(\"All tasks completed\")\n```"
+    },
+    {
       "id": "qa-1793601308444",
       "sessionId": "sess-1793558812299",
       "question": "valid parenthesis",
