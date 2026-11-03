@@ -19,6 +19,12 @@
   ],
   "qas": [
     {
+      "id": "qa-1793697883081",
+      "sessionId": "sess-1793558812299",
+      "question": "questions",
+      "answer": "what is select_related and prefetch_related?\nwhat is n+1 query?\nwhat if you have to review the junior's pr then how u will review?"
+    },
+    {
       "id": "qa-1793603074570",
       "sessionId": "sess-1793558812299",
       "question": "methods",
